@@ -35,4 +35,37 @@ def file2matrix(filename):
         index += 1
     return returnMat, classLabelVetor
 
+def autoNorm(dataSet):
+    minValues = dataSet.min(0)
+    maxValues = dataSet.max(0)
+    ranges = maxValues - minValues
+    normDataSet = np.zeros(np.shape(dataSet))
+    m = dataSet.shape[0]
+    normDataSet = dataSet - np.tile(minValues, (m, 1))
+    normDataSet = normDataSet/np.tile(ranges, (m, 1))
+    return normDataSet, ranges, minValues,
 
+def datingClassTest():
+    hoRatio = 0.10
+    datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
+    normMat, ranges, minValues = autoNorm(datingDataMat)
+    m = normMat.shape[0]
+    numTestVec = int(m*hoRatio)
+    errorCount = 0.0
+    for i in range(numTestVec):
+        classifierResult = classify0(normMat[i,:], normMat[numTestVec:m, :], datingLabels[numTestVec:m], 3)
+        print "the classifier came back with %d, the real answer is %d" %(classifierResult, datingLabels[i])
+        if (classifierResult != datingLabels[i]):
+            errorCount += 1
+    print "the total error rate is %f" %(errorCount/float(numTestVec))
+
+def classifyPersion():
+    resultList = ["not at all", "in small doses", "in large doses"]
+    percetTats = float(raw_input("percentage of time spent playing video games?"))
+    ffMiles = float(raw_input("frequent flier miles earned per year?"))
+    iceCream = float(raw_input("liters of ice cream consumed per year?"))
+    datingDataMat, datingLabels = file2matrix("datingTestSet2.txt")
+    normMat, ranges, minValues = autoNorm(datingDataMat)
+    inArr = np.array([percetTats, ffMiles, iceCream])
+    classifyResult = classify0((inArr-minValues)/ranges, normMat, datingLabels, 3)
+    print "You will probably like this person: ", resultList[classifyResult]

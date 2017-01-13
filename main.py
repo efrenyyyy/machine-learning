@@ -12,7 +12,8 @@ normDataSet, ranges, minValues = kNN.autoNorm(datingDataMat)
 #print normDataSet
 #print ranges
 #print minValues
-kNN.datingClassTest()
+#kNN.datingClassTest()
+kNN.handwritingClassTest()
 fig = plt.figure(1)
 ax = fig.add_subplot(111)
 ax.scatter(datingDataMat[:,0], datingDataMat[:,2], 15.0*array(datingLabels), 15.0*array(datingLabels))
